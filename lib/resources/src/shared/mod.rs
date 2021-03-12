@@ -51,7 +51,7 @@ pub enum InternalSyncPoint {
 pub struct SharedResources {
     resource_metadata: Slab<ResourceMetadata>,
     path_resource_ids: HashMap<ResourcePathBuf, usize, BuildHasherDefault<XxHash>>,
-    backends: BTreeMap<LoaderKey, Box<Backend>>,
+    backends: BTreeMap<LoaderKey, Box<dyn Backend>>,
     outdated_at: Option<Instant>,
 
     modification_queue: VecDeque<Modification>,
@@ -151,7 +151,7 @@ impl SharedResources {
             }
         }
 
-        ::std::mem::replace(&mut self.modification_queue, mod_queue);
+        let _dummy=::std::mem::replace(&mut self.modification_queue, mod_queue);
 
         new_change_point
     }
@@ -254,7 +254,7 @@ impl SharedResources {
                 id: loader_id.into(),
                 order,
             },
-            Box::new(backend) as Box<Backend>,
+            Box::new(backend) as Box<dyn Backend>,
         );
         if self.path_resource_ids.len() > 0 {
             self.outdated_at = Some(outdated_at);
@@ -288,7 +288,7 @@ impl SharedResources {
     pub fn resource_backends(
         &mut self,
         key: UserKey,
-    ) -> impl Iterator<Item = (&ResourcePath, Option<Instant>, &mut Box<Backend>)> {
+    ) -> impl Iterator<Item = (&ResourcePath, Option<Instant>, &mut Box<dyn Backend>)> {
         let path_with_modification_time =
             self.resource_metadata.get(key.resource_id).and_then(|m| {
                 m.users
@@ -306,7 +306,7 @@ impl SharedResources {
         &self,
         backend_id: &str,
         key: UserKey,
-    ) -> Option<(&ResourcePath, Option<Instant>, &Box<Backend>)> {
+    ) -> Option<(&ResourcePath, Option<Instant>, &Box<dyn Backend>)> {
         let path_with_modification_time =
             self.resource_metadata.get(key.resource_id).and_then(|m| {
                 m.users
@@ -336,7 +336,7 @@ impl SharedResources {
     pub fn get_resource_path_backend_containing_resource(
         &self,
         key: UserKey,
-    ) -> Option<(&ResourcePath, Option<Instant>, &Box<Backend>)> {
+    ) -> Option<(&ResourcePath, Option<Instant>, &Box<dyn Backend>)> {
         let path_with_modification_time =
             self.resource_metadata.get(key.resource_id).and_then(|m| {
                 m.users

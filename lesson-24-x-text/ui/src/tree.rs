@@ -161,10 +161,10 @@ mod shared {
 
         #[inline(always)]
         pub fn add<E: Element + 'static>(&mut self, element: E) -> Ix {
-            self.add_boxed(Box::new(element) as Box<Element>)
+            self.add_boxed(Box::new(element) as Box<dyn Element>)
         }
 
-        pub fn add_boxed(&mut self, element: Box<Element>) -> Ix {
+        pub fn add_boxed(&mut self, element: Box<dyn Element>) -> Ix {
             let id = self
                 .container
                 .add_node(self.id, element);
@@ -623,7 +623,7 @@ mod shared {
             }
         }
 
-        pub fn new_root(&mut self, element: Box<Element>, window_scale: f32) -> Ix {
+        pub fn new_root(&mut self, element: Box<dyn Element>, window_scale: f32) -> Ix {
             let root_id = self.next_id.inc();
 
             self.queues.borrow_mut().send(Effect::Add {
@@ -665,7 +665,7 @@ mod shared {
             root_id
         }
 
-        pub fn add_node(&mut self, parent_id: Ix, element: Box<Element>) -> Ix {
+        pub fn add_node(&mut self, parent_id: Ix, element: Box<dyn Element>) -> Ix {
             let id = self.next_id.inc();
 
             self.queues.borrow_mut().send(Effect::Add {
@@ -714,7 +714,7 @@ mod shared {
         }
 
         #[inline(always)]
-        pub fn get_node_mut(&mut self, id: Ix) -> Option<&mut Element> {
+        pub fn get_node_mut(&mut self, id: Ix) -> Option<&mut dyn Element> {
             self.nodes.get_mut(&id).map(|node| node.element_mut())
         }
 
@@ -867,7 +867,7 @@ mod shared {
                 el.action(base, arg)
             }, action);
 
-            ::std::mem::replace(&mut self.action_set, Some(update_list));
+            let _dummy=::std::mem::replace(&mut self.action_set, Some(update_list));
 
             let set = self.action_set.as_mut().unwrap();
             while let Some(a) = self.action_set_actions.pop_front() {
@@ -886,7 +886,7 @@ mod shared {
                 el.update(base, arg)
             }, delta);
 
-            ::std::mem::replace(&mut self.update_set, Some(update_list));
+            let _dummy=::std::mem::replace(&mut self.update_set, Some(update_list));
 
             let set = self.update_set.as_mut().unwrap();
             while let Some(a) = self.update_set_actions.pop_front() {
@@ -899,7 +899,7 @@ mod shared {
 
         #[inline(always)]
         pub fn update_template<A, F>(&mut self, update_list: &BTreeSet<Ix>, mut fun: F, arg: A)
-            where F: FnMut(&mut Element, &mut Base, A), A: Copy
+            where F: FnMut(&mut dyn Element, &mut Base, A), A: Copy
         {
             enum ResizeAction {
                 None,
@@ -996,7 +996,7 @@ mod shared {
 
     pub struct NodeBody {
         children: Children,
-        el: Box<Element>,
+        el: Box<dyn Element>,
     }
 
     use std::cell::RefMut;
@@ -1015,7 +1015,7 @@ mod shared {
             parent_id: Option<Ix>,
             children: Children,
             parent_transform: &na::Projective3<f32>,
-            element: Box<Element>,
+            element: Box<dyn Element>,
             window_scale: f32,
         ) -> NodeSkeleton {
             NodeSkeleton {
@@ -1067,7 +1067,7 @@ mod shared {
         }
 
         #[inline(always)]
-        pub fn element_mut(&mut self) -> &mut Element {
+        pub fn element_mut(&mut self) -> &mut dyn Element {
             self.body
                 .as_mut()
                 .map(|b| &mut *b.el)
@@ -1093,7 +1093,7 @@ impl Tree {
             id: self
                 .shared
                 .borrow_mut()
-                .new_root(Box::new(element) as Box<Element>, window_scale),
+                .new_root(Box::new(element) as Box<dyn Element>, window_scale),
             shared: self.shared.clone(),
         }
     }

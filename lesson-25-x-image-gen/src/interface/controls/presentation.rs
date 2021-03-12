@@ -2,7 +2,7 @@ use ui::*;
 use crate::na;
 
 pub struct CombinedSlide {
-    items: Vec<Box<Element>>,
+    items: Vec<Box<dyn Element>>,
     _margin: f32,
     _item_gap: f32,
 }
@@ -17,7 +17,7 @@ impl CombinedSlide {
     }
 
     pub fn with<E: Element + 'static>(mut self, slide: E) -> Self {
-        self.items.push(Box::new(slide) as Box<Element>);
+        self.items.push(Box::new(slide) as Box<dyn Element>);
         self
     }
 
@@ -110,7 +110,7 @@ fn smootherstep(edge0: f32, edge1: f32, x: f32) -> f32 {
 }
 
 pub struct Presentation {
-    slides: Vec<Box<Element>>,
+    slides: Vec<Box<dyn Element>>,
     num_elements: usize,
     slide_index: usize,
     element_info: Vec<ElementInfo>,
@@ -129,7 +129,7 @@ impl Presentation {
     }
 
     pub fn with_slide<E: Element + 'static>(mut self, slide: E) -> Self {
-        self.slides.push(Box::new(slide) as Box<Element>);
+        self.slides.push(Box::new(slide) as Box<dyn Element>);
         self.num_elements += 1;
         self.element_info.push(ElementInfo::new());
         self
@@ -628,7 +628,7 @@ impl Element for TextSlide {
                 }
 
 
-                let mut max_text_width: f32 = lines.iter().map(|l| match l {
+                let max_text_width: f32 = lines.iter().map(|l| match l {
                     Line::Empty(_) => 0.0,
                     Line::ParagraphBreak(s) => s.width,
                     Line::WordWrap(s) => s.width,

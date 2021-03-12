@@ -315,7 +315,7 @@ pub mod shared {
             let mut unicode_buffer = ::std::mem::replace(&mut self.buffer, None).unwrap().clear();
             unicode_buffer = unicode_buffer.add_str(&self.text);
 
-            ::std::mem::replace(&mut self.buffer, Some(hb::shape(&font, unicode_buffer, &[])));
+            let _dummy=::std::mem::replace(&mut self.buffer, Some(hb::shape(&font, unicode_buffer, &[])));
         }
 
         fn measure(&self, output: &mut Vec<GlyphPosition>) -> Option<(i32, i32)> {

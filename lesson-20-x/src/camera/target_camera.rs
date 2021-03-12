@@ -52,11 +52,11 @@ impl TargetCamera {
     }
 
     pub fn get_p_matrix(&self) -> na::Matrix4<f32> {
-        self.projection.unwrap()
+        self.projection.into_inner()
     }
 
     pub fn get_vp_matrix(&self) -> na::Matrix4<f32> {
-        self.projection.unwrap() * self.get_view_matrix()
+        self.projection.into_inner() * self.get_view_matrix()
     }
 
     /// Zoom scene using specified scroll wheel difference.

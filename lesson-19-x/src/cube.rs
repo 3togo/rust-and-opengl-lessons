@@ -212,10 +212,10 @@ impl Cube {
 
                 for (v, i) in &[(a, ai), (b, bi), (c, ci)] {
                     // project tangent and bitangent into the plane formed by the vertex' normal
-                    let mut local_tangent = face_tangent_vectors.t.unwrap()
-                        - v.normal.unwrap() * (face_tangent_vectors.t.dot(&v.normal));
-                    let mut local_bitangent = face_tangent_vectors.b.unwrap()
-                        - v.normal.unwrap() * (face_tangent_vectors.b.dot(&v.normal));
+                    let mut local_tangent = face_tangent_vectors.t.into_inner()
+                        - v.normal.into_inner() * (face_tangent_vectors.t.dot(&v.normal));
+                    let mut local_bitangent = face_tangent_vectors.b.into_inner()
+                        - v.normal.into_inner() * (face_tangent_vectors.b.dot(&v.normal));
                     local_tangent.normalize_mut();
                     local_bitangent.normalize_mut();
 
@@ -247,7 +247,7 @@ impl Cube {
                         let ref mut existing_tangent_vectors =
                             vertices[*i as usize].tangent_vectors;
                         if existing_tangent_vectors.is_some() {
-                            //println!("Existing vectors {}, new {}", existing_tangent_vectors.unwrap().n.unwrap(), face_tangent_vectors.n.unwrap());
+                            //println!("Existing vectors {}, new {}", existing_tangent_vectors.into_inner().n.into_inner(), face_tangent_vectors.n.into_inner());
                         } else {
                             *existing_tangent_vectors = Some(face_tangent_vectors);
                         }

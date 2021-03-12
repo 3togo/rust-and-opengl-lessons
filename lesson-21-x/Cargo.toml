@@ -17,7 +17,7 @@ image = "0.20"
 tobj = "0.1.6"
 
 [dependencies.sdl2]
-version = "0.31.0"
+version = "0.34.0"
 features = ["bundled", "static-link"]
 
 [build-dependencies]

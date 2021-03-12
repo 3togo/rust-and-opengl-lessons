@@ -194,14 +194,14 @@ impl Backend for FileSystem {
         }
     }
 
-    fn read_into(&mut self, path: &ResourcePath, mut output: &mut io::Write) -> Result<(), Error> {
+    fn read_into(&mut self, path: &ResourcePath, mut output: &mut dyn io::Write) -> Result<(), Error> {
         let path = resource_name_to_path(&self.root_path, path);
         let mut reader = io::BufReader::new(fs::File::open(path)?);
         io::copy(&mut reader, &mut output)?;
         Ok(())
     }
 
-    fn write_from(&mut self, _path: &ResourcePath, _buffer: &mut io::Read) -> Result<(), Error> {
+    fn write_from(&mut self, _path: &ResourcePath, _buffer: &mut dyn io::Read) -> Result<(), Error> {
         unimplemented!()
     }
 }

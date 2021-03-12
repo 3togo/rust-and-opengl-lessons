@@ -108,7 +108,7 @@ fn run() -> Result<(), failure::Error> {
     // -1 for late swap tearing
 
     let vsync = true;
-    video_subsystem.gl_set_swap_interval(if vsync { 1 } else { 0 });
+    video_subsystem.gl_set_swap_interval(if vsync { 1 } else { 0 }).map_err(|err| println!("{:?}", err)).ok();
 
     let mut frame_profiler = render_gl::FrameProfiler::new(&gl, &resources, 80)?;
     frame_profiler.toggle();

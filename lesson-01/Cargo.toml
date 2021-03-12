@@ -6,5 +6,5 @@ authors = ["Nerijus Arlauskas <nercury@gmail.com>"]
 [dependencies]
 
 [dependencies.sdl2]
-version = "0.31.0"
+version = "0.34.0"
 features = ["bundled", "static-link"]

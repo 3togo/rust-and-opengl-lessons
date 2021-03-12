@@ -134,7 +134,7 @@ impl SharedSelectables {
                 if let Some(toi) = plane.toi_with_ray(&plane_isometry, ray, true) {
                     let dragged_to_point_on_plane = ray.origin + ray.dir * toi;
                     let drag_vector = dragged_to_point_on_plane - point;
-                    if na::norm_squared(&drag_vector) > DRAG_SNAP_DISTANCE * DRAG_SNAP_DISTANCE {
+                    if na::base::Matrix::norm_squared(&drag_vector) > DRAG_SNAP_DISTANCE * DRAG_SNAP_DISTANCE {
                         self.query.push(PendingAction {
                             handle: handle,
                             action: Action::Drag {

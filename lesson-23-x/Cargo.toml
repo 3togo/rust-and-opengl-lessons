@@ -18,7 +18,7 @@ tobj = "0.1.6"
 once_cell = "0.1.4"
 
 [dependencies.sdl2]
-version = "0.31.0"
+version = "0.34.0"
 features = ["bundled", "static-link"]
 
 [build-dependencies]
