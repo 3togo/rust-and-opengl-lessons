@@ -1,0 +1,15 @@
+[package]
+name = "lesson-01-window"
+version = "0.1.0"
+authors = ["Nerijus Arlauskas <nercury@gmail.com>"]
+
+[dependencies]
+
+[dependencies.openssl]
+version = "0.10.32"
+
+
+[dependencies.sdl2]
+version = "0.34.3"
+features = ["bundled", "static-link"]
+
